@@ -1,0 +1,29 @@
+server:
+  port: 8761
+
+#配置 spring
+spring:
+  security:
+    #设置 Eureka Server 身份验证，注意是以 spring 开头,spring.security
+    basic:
+      enabeld: true #启用身份验证
+    user:
+      name: lyy #登录账号
+      password: lyy123 #登录密码
+  instance:
+    hostname: localhost
+  client:
+    # 避免eureka向自己进行注册
+    fetch-registry: false
+    # 避免eureka查找服务列表
+    register-with-eureka: false
+    serviceUrl:
+      defaultZone: http://${spring.security.user.name}:${spring.security.user.password}@${eureka.instance.hostname}:${server.port}/eureka/
+
+logging:
+  level:
+    com:
+      netflix:
+        discovery: 'OFF'
+        eureka: 'OFF'
+

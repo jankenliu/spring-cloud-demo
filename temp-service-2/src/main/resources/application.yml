@@ -1,0 +1,17 @@
+# 应用服务web访问端口
+server:
+    port: 8002
+
+spring:
+    application:
+        name: temp-service-2
+
+eureka:
+    client:
+        serviceUrl:
+            defaultZone: http://lyy:lyy123@localhost:8761/eureka
+
+feign:
+    hystrix:
+        # 开启feign的熔断降级功能
+        enabled: true

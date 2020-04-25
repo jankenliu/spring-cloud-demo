@@ -1,0 +1,12 @@
+# 应用服务web访问端口
+server:
+    port: 8001
+
+spring:
+    application:
+        name: temp-service-1
+
+eureka:
+    client:
+        serviceUrl:
+            defaultZone: http://lyy:lyy123@localhost:8761/eureka
