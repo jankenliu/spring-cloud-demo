@@ -36,7 +36,6 @@ public class TestController {
         map.put("requestUrl",request.getRequestURL());
         map.put("remotePort",request.getRemotePort());
         map.put("time",System.currentTimeMillis());
-        System.out.println(map);
         return map;
     }
 

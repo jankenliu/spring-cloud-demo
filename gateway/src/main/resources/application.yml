@@ -14,11 +14,6 @@ hystrix:
         isolation:
           thread:
             timeoutInMilliseconds: 4000
-    fallbackcmd:
-      execution:
-        isolation:
-          thread:
-            timeoutInMilliseconds: 2000
 
 spring:
   application:
@@ -26,7 +21,8 @@ spring:
   redis:
     host: localhost
     password:
-    database: 0
+    database: 1
+    port: 6379
   cloud:
     gateway:
       discovery:
@@ -41,29 +37,22 @@ spring:
           args:
             name: default
             fallbackUri: 'forward:/gateWayDefaultBack2'
-#      routes:
-#        # 降级处理
-#        - id: hystrix_route
-#          uri: http://localhost:8000/
-#          predicates:
-#            - Method=GET
-#          filters:
-#            # 熔断降级配置
-#            - name: Hystrix
-#              args:
-#                name: fallbackcmd
-#                fallbackUri: 'forward:/gateWayDefaultBack'
-#        # 请求限流
-#        - id: request_rate_limit_route
-#          uri: http:localhost:8001/
-#          predicates:
-#            - Method=GET
-#          filters:
-#            - name: RequestRateLimiter
-#            args:
-#              # 用于限流的键的解析器的 Bean 对象的名字。它使用 SpEL 表达式根据#{@beanName}从 Spring 容器中获取 Bean 对象。
-#              key-resolver: '#{@hostAddrKeyResolver}'
-#              # 令牌桶每秒填充平均速率(每秒允许处理的请求数量)
-#              redis-rate-limiter.replenishRate: 1
-#              # 令牌桶总容量(每秒最多处理的请求数量)
-#              redis-rate-limiter.burstCapacity: 3
+      routes:
+        # 请求限流
+        - id: request_rate_limit_route
+          uri: http://localhost:8000
+          predicates:
+            - Path=/**/limit_rate/**
+          filters:
+            - StripPrefix=1
+            - name: RequestRateLimiter
+              args:
+                # 用于限流的键的解析器的 Bean 对象的名字。它使用 SpEL 表达式根据#{@beanName}从 Spring 容器中获取 Bean 对象。
+                key-resolver: '#{@apiKeyResolver}'
+                # 令牌桶每秒填充平均速率(每秒允许处理的请求数量)
+                redis-rate-limiter.replenishRate: 1
+                # 令牌桶总容量(每秒最多处理的请求数量)
+                redis-rate-limiter.burstCapacity: 2
+logging:
+  level:
+    org.springfarmework:cloud.gateway: debug

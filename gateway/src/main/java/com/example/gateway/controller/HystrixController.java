@@ -33,4 +33,14 @@ public class HystrixController {
         map.put("desc","服务降级处理2");
         return map;
     }
+
+    @GetMapping("gateWayDefaultBack3")
+    public Object gateWayDefaultBack3(){
+        Map<String,Object> map = new HashMap<>();
+        map.put("code",1);
+        map.put("state",false);
+        map.put("message","服务繁忙");
+        map.put("desc","当前请求人数过多，请重新尝试");
+        return map;
+    }
 }
